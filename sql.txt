@@ -1,0 +1,59 @@
+テーブル結合について
+
+複数のテーブルからデータを結合しひとつのレコードとして取得する手法
+構文：LEFT JOIN句
+
+【基本形】
+SELECT * FROM `feeds` WHERE 1
+
+LEFT JOIN句を使った式
+構文：SELECT * FROM 主テーブル LEFT JOIN 結合テーブル ON 結合条件 WHERE 1
+
+SELECT * FROM `feeds` LEFT JOIN `users` ON `feeds`.`user_id`=`users`.`id` WHERE 1
+
+左辺のテーブルを軸に、ON以下の条件に一致する右辺テーブルのデータを結合する
+ONの後の構文：ON `主テーブル名`.`外部キー`=`結合テーブル`.`主キー`
+
+主キー：テーブル内にひとつある一意のid
+外部キー：外部テーブルとのひも付きを表すid
+
+
+取得カラムの制限（完成形）
+SELECT `feeds`.*,`users`.`name`,`users`.`img_name` FROM `feeds` LEFT JOIN `users` ON `feeds`.`user_id`=`users`.`id` WHERE 1
+
+
+応用編（省略形）
+AS句を使ってテーブル名にエイリアス（別名）をつける
+例）SELECT * FROM `feeds` AS `f`
+
+SELECT `f`.*,`u`.`name`,`u`.`img_name` FROM `feeds` AS `f` LEFT JOIN `users` AS `u` ON `f`.`user_id`=`u`.`id` WHERE 1
+
+最後に、バッククォート省略
+SELECT f.*,u.name,u.img_name FROM feeds AS f LEFT JOIN users AS u ON f.user_id=u.id WHERE 1
+
+
+取得レコードを制限したい場合
+例）ひろしのデータのみ取得したい
+SELECT f.*,u.name,u.img_name FROM feeds AS f LEFT JOIN users AS u ON f.user_id=u.id WHERE f.user_id=1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
