@@ -35,6 +35,25 @@
     // var_dump($_SESSION);
     // echo '</pre>';
 
+    // いいね！データの取得
+    $sql = 'SELECT COUNT(*) AS cnt FROM likes WHERE user_id=? AND feed_id=?';
+    $data = array($_SESSION['user']['id'], $_REQUEST['feed_id']);
+    $stmt = $dbh->prepare($sql);
+    $stmt->execute($data);
+
+    // SQLのCOUNT()集計関数とは
+    // 取得したデータの件数を返すSELECT文にできる
+    // カラム名（$likeの後のキー）がCOUNT(*)になる
+    // このままだと見づらいので基本的にはエイリアスを使って別名をつける（AS句）
+
+    // Fetch→配列にする
+    $like = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    echo '<pre>';
+    echo '$like = ';
+    var_dump($like);
+    echo '</pre>';
+
 
     // 表示する
 ?>
@@ -57,6 +76,18 @@
           <?php echo $feed['name']; ?><br>
           <?php echo $feed['created']; ?><br>
           <?php echo $feed['feed']; ?><br>
+
+          <!-- いいねボタン -->
+          <form method="POST" action="likes.php" style="display: inline;">
+            <input type="hidden" name="feed_id" value="<?php echo $_REQUEST['feed_id']; ?>">
+            <!-- <input type="submit" value="いいね！" class="btn btn-info btn-xs"> -->
+            
+            <?php if($like['cnt'] == 0) { ?>
+              <button type="submit" class="btn btn-default btn-xs"><i class="fa fa-thumbs-up"></i>いいね！</button>
+            <?php } else { ?>
+              <button type="submit" class="btn btn-info btn-xs"><i class="fa fa-thumbs-up"></i>いいね！を取り消す</button>
+            <?php } ?>
+          </form>
           
           <?php if($feed['user_id'] == $_SESSION['user']['id']){ ?>
             <a href="edit.php?feed_id=<?php echo $feed['id']; ?>" class="btn btn-success btn-xs">編集</a>
